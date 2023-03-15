@@ -14,4 +14,4 @@ COPY --from=build /app/pulumiservice-exporter /app/pulumiservice-exporter
 EXPOSE 9414
 USER nonroot:nonroot
 
-ENTRYPOINT ["/pulumiservice-exporter"]
+ENTRYPOINT ["/app/pulumiservice-exporter"]
