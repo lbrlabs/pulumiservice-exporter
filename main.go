@@ -2,17 +2,19 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/lbrlabs/pulumiservice-exporter/collector"
+	"github.com/lbrlabs/pulumiservice-exporter/pkg/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/promlog"
 	"github.com/prometheus/common/promlog/flag"
-	"github.com/prometheus/common/version"
+	promver "github.com/prometheus/common/version"
 	"github.com/prometheus/exporter-toolkit/web"
-	"net/http"
-	"os"
 
 	"runtime"
 
@@ -34,14 +36,25 @@ var (
 )
 
 func init() {
-	prometheus.MustRegister(version.NewCollector("pulumiservice_exporter"))
+	prometheus.MustRegister(promver.NewCollector("pulumiservice_exporter"))
 }
 
 func main() {
 
 	promlogConfig := &promlog.Config{}
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
-	kingpin.Version(version.Print("pulumiservice_exporter"))
+
+	ver := version.Version
+	if ver == "" {
+		ver = "snapshot"
+	}
+
+	sha := version.Commit
+	if sha == "" {
+		sha = "unknown"
+	}
+
+	kingpin.Version(fmt.Sprintf("%s-%s", ver, sha))
 	kingpin.HelpFlag.Short('h')
 
 	opts := &collector.PulumiServiceOpts{}
@@ -117,21 +130,12 @@ func main() {
 
 }
 
-var (
-	Version      string
-	gitCommit    string
-	gitTreeState = ""                     // state of git tree, either "clean" or "dirty"
-	buildDate    = "1970-01-01T00:00:00Z" // build date, output of $(date +'%Y-%m-%dT%H:%M:%S')
-)
-
 func versionPrint() string {
 	return fmt.Sprintf(`Name: %s
 Version: %s
 CommitID: %s
-GitTreeState: %s
-BuildDate: %s
 GoVersion: %s
 Compiler: %s
 Platform: %s/%s
-`, collector.Name(), Version, gitCommit, gitTreeState, buildDate, runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH)
+`, collector.Name(), version.Version, version.Commit, runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH)
 }

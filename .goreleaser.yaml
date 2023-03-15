@@ -1,0 +1,36 @@
+before:
+  hooks:
+    - go mod download
+builds:
+- goos:
+    - darwin
+    - windows
+    - linux
+  goarch:
+    - amd64
+    - arm64
+  ldflags: -X github.com/lbrlabs/pulumiservice-exporter/pkg/version.Version={{.Version}} -X github.com/lbrlabs/pulumiservice-exporter/pkg/version.Commit={{.ShortCommit}}
+  binary: pulumiservice-exporter
+archives:
+- name_template: "{{ .Binary }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
+  format_overrides:
+    - goos: windows
+      format: zip
+snapshot:
+  name_template: "{{ .Tag }}-SNAPSHOT"
+changelog:
+  skip: true
+release:
+  prerelease: auto
+scoop:
+  url_template: "http://github.com/lbrlabs/pulumiservice-exporter/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  bucket:
+    owner: jaxxstorm
+    name: scoop-bucket
+    branch: main
+  commit_author:
+    name: bot
+    email: bot@leebriggs.co.uk
+  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+  homepage: "https://leebriggs.co.uk/"
+  description: "Quickly connect to your cloud infrastructure."

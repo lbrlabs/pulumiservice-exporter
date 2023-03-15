@@ -2,17 +2,15 @@ FROM golang:1.19-bullseye AS build
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-COPY main.go ./
+COPY . /app
 
-RUN go build -o /pulumiservice-exporter
+RUN go build -o /app/pulumiservice-exporter
 
 ## Deploy
 FROM gcr.io/distroless/base-debian10
 
-WORKDIR /
-COPY --from=build /pulumiservice-exporter /pulumiservice-exporter
+WORKDIR /app
+COPY --from=build /app/pulumiservice-exporter /app/pulumiservice-exporter
 EXPOSE 9414
 USER nonroot:nonroot
 
