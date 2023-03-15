@@ -37,12 +37,12 @@ type Error struct {
 
 // use after set Opts
 func (o *PulumiServiceOpts) AddFlag() {
-	kingpin.Flag("address", "API address of the pulumi service. (prefix with https:// to connect over HTTPS)").Default("https://api.pulumi.com").StringVar(&o.Url)
+	kingpin.Flag("address", "API address of the pulumi service. (prefix with https:// to connect over HTTPS)").Envar("PULUMI_API_ADDRESS").Default("https://api.pulumi.com").StringVar(&o.Url)
 	kingpin.Flag("access-token", "Pulumi access token.").Required().Envar("PULUMI_ACCESS_TOKEN").StringVar(&o.AccessToken)
 	kingpin.Flag("user-agent", "user agent of the pulumiservice http client").Default("pulumiservice_exporter").StringVar(&o.UA)
 	kingpin.Flag("timeout", "Timeout on HTTP requests to the pulumi service API.").Default("1600ms").DurationVar(&o.Timeout)
 	kingpin.Flag("insecure", "Disable TLS host verification.").BoolVar(&o.Insecure)
-	kingpin.Flag("org", "Pulumi organization.").Required().StringVar(&o.Org)
+	kingpin.Flag("org", "Pulumi organization.").Required().Envar("PULUMI_ORG").StringVar(&o.Org)
 }
 
 func (h *PulumiServiceClient) request(endpoint string) ([]byte, error) {
