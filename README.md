@@ -10,7 +10,7 @@ You can run the exporter a Docker image or as a standalone binary.
 
 Simply specify the Pulumi org and an access token
 
-``
+```
 pulumiserver-export --org=demo --access-token=pul-xxxxxx
 ```
 
