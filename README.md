@@ -15,4 +15,5 @@ pulumiserver-export --org=demo --access-token=pul-xxxxxx
 ```
 
 ```
+docker run -e PULUMI_ORG=${PULUMI_ORG} -e PULUMI_ACCESS_TOKEN=${PULUMI_ACCESS_TOKEN} ghcr.io/lbrlabs/pulumiservice-exporter
 ```
