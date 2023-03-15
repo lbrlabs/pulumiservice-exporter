@@ -1,4 +1,4 @@
-module github.com/jaxxstorm/pulumiservice-exporter
+module github.com/lbrlabs/pulumiservice-exporter
 
 go 1.19
 
